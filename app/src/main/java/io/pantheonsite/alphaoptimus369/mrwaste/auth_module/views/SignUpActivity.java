@@ -20,12 +20,17 @@ public class SignUpActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_sign_up);
+        binding.setLifecycleOwner(this);
 
         initListeners();
     }
 
     private void initListeners()
     {
+        binding.buttonSignUp.setOnClickListener(v ->
+                ActivityStarter.startMapsActivity(this, true)
+        );
+
         binding.buttonLogIn.setOnClickListener(v ->
                 ActivityStarter.startLogInActivity(this, false)
         );

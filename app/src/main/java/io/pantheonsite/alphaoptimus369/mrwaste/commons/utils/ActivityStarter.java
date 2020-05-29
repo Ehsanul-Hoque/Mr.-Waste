@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import io.pantheonsite.alphaoptimus369.mrwaste.auth_module.views.LogInActivity;
 import io.pantheonsite.alphaoptimus369.mrwaste.auth_module.views.SignUpActivity;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.data.Constants;
+import io.pantheonsite.alphaoptimus369.mrwaste.maps_module.views.MapsActivity;
 
 
 public class ActivityStarter
@@ -21,13 +22,28 @@ public class ActivityStarter
         Bundle data = new Bundle();
         data.putBoolean(Constants.EXTRA_PREV_ACTIVITY_FINISHED, finishPreviousActivity);
 
-        intent.putExtras(data);
+        intent
+                .putExtras(data)
+                .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intent);
     }
 
     public static void startSignUpActivity(@NonNull Context context, boolean finishPreviousActivity)
     {
         Intent intent = new Intent(context, SignUpActivity.class);
+
+        Bundle data = new Bundle();
+        data.putBoolean(Constants.EXTRA_PREV_ACTIVITY_FINISHED, finishPreviousActivity);
+
+        intent
+                .putExtras(data)
+                .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity(intent);
+    }
+
+    public static void startMapsActivity(@NonNull Context context, boolean finishPreviousActivity)
+    {
+        Intent intent = new Intent(context, MapsActivity.class);
 
         Bundle data = new Bundle();
         data.putBoolean(Constants.EXTRA_PREV_ACTIVITY_FINISHED, finishPreviousActivity);

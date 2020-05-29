@@ -10,4 +10,12 @@
     <string name="mr_waste">Mr. Waste</string>
     <string name="already_registered">Already registered?</string>
     <string name="have_not_registered">Haven\'t registered yet?</string>
+    <string name="save">Save</string>
+
+    <string name="title_activity_maps">Map</string>
+    <string name="current_location">Current Location:</string>
+    <string name="no_map_found">No map found.</string>
+    <string name="failed_to_get_location">Failed to get current location.</string>
+    <string name="gps_permission_denied">Permission denied. Showing current location needs GPS to be turned on.</string>
+    <string name="location_permission_denied">Permission denied. Please turn on the location permissions from settings.</string>
 </resources>
