@@ -16,7 +16,7 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="150dp"
             android:src="@drawable/logo_app"/>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -58,66 +58,6 @@
             android:layout_marginRight="32dp"
             android:layout_marginEnd="32dp"
             android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            android:textColorHint="@android:color/white"
-            app:counterEnabled="true"
-            app:counterTextColor="@android:color/darker_gray"
-            app:counterMaxLength="20"
-            app:hintEnabled="true"
-            app:hintTextColor="@android:color/white"
-            app:hintAnimationEnabled="true">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editText_phone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="phone"
-                android:maxLength="20"
-                android:hint="@string/contact_no"
-                android:textSize="18sp"
-                android:textColor="@android:color/white"
-                android:textColorHint="@android:color/white"
-                android:textColorHighlight="@android:color/holo_green_light"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <RadioGroup
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="28dp"
-            android:layout_marginStart="28dp"
-            android:layout_marginRight="28dp"
-            android:layout_marginEnd="28dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            android:orientation="horizontal">
-
-            <androidx.appcompat.widget.AppCompatRadioButton
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/consumer"
-                android:textSize="18sp"
-                android:textColor="@android:color/white"/>
-
-            <androidx.appcompat.widget.AppCompatRadioButton
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/mr_waste"
-                android:textSize="18sp"
-                android:textColor="@android:color/white"/>
-
-        </RadioGroup>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="32dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginRight="32dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginTop="4dp"
             android:layout_marginBottom="8dp"
             android:textColorHint="@android:color/white"
             app:counterEnabled="true"
@@ -144,7 +84,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/button_sign_up"
+            android:id="@+id/button_log_in"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="32dp"
@@ -154,7 +94,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp"
             android:background="@android:color/white"
-            android:text="@string/sign_up"
+            android:text="@string/log_in"
             android:textSize="14sp"
             android:textColor="@android:color/black"/>
 
@@ -167,16 +107,16 @@
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/already_registered"
+                android:text="@string/have_not_registered"
                 android:textColor="@android:color/darker_gray"
                 android:textSize="14sp"/>
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/button_log_in"
+                android:id="@+id/button_sign_up"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:text="@string/log_in"
+                android:text="@string/sign_up"
                 android:textSize="14sp"
                 android:textColor="@android:color/white"/>
 
