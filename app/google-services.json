@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "734697919747",
+    "firebase_url": "https://mrwaste-cd198.firebaseio.com",
+    "project_id": "mrwaste-cd198",
+    "storage_bucket": "mrwaste-cd198.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:734697919747:android:a6cc0d2ce26f976ff40536",
+        "android_client_info": {
+          "package_name": "io.pantheonsite.alphaoptimus369.mrwaste"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "734697919747-0g3lrovcd1kr8jkeop9f8m8j3gjmam4h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDD5uwduP7sDfqHeIpqSMTDiGfsZzXGVMA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "734697919747-0g3lrovcd1kr8jkeop9f8m8j3gjmam4h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
