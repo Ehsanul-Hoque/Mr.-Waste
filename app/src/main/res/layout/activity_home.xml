@@ -7,14 +7,14 @@
         <import type="android.view.View" />
 
         <variable
-            name="below_n"
+            name="arAvailable"
             type="boolean" />
 
     </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="@android:color/white">
 
         <androidx.core.widget.NestedScrollView
@@ -29,7 +29,6 @@
                 android:orientation="vertical">
 
                 <androidx.cardview.widget.CardView
-                    android:visibility="@{below_n ? View.GONE : View.VISIBLE}"
                     android:id="@+id/cardButton_goToAR"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

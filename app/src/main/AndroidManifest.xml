@@ -23,6 +23,7 @@
         android:name=".app.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
+        android:hardwareAccelerated="true"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -32,7 +33,7 @@
             android:value="@string/google_maps_key" />
         <!-- "AR Optional" app, contains non-AR features that can be used when
          "Google Play Services for AR" (ARCore) is not available. -->
-        <meta-data android:name="com.google.ar.core" android:value="optional" />
+        <meta-data android:name="com.google.ar.core" android:value="required" />
         <activity
             android:name=".auth_module.views.SignUpActivity"
             android:screenOrientation="portrait"
