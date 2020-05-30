@@ -10,7 +10,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -169,12 +168,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback
 
     private void initListeners()
     {
-        binding.buttonSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                registerInFirebase();
-            }
-        });
+        binding.buttonSave.setOnClickListener(v -> registerInFirebase());
     }
 
     private void getLocationPermissionForCurrentPosition()
