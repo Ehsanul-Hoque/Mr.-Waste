@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
+import io.pantheonsite.alphaoptimus369.mrwaste.ar_module.AugmentedImageActivity;
 import io.pantheonsite.alphaoptimus369.mrwaste.auth_module.views.LogInActivity;
 import io.pantheonsite.alphaoptimus369.mrwaste.auth_module.views.SignUpActivity;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.data.Constants;
@@ -93,6 +94,23 @@ public class ActivityStarter
     public static void startHomeActivity(@NonNull Context context, boolean finishPreviousActivity)
     {
         Intent intent = new Intent(context, HomeActivity.class);
+
+        Bundle data = new Bundle();
+        data.putBoolean(Constants.EXTRA_PREV_ACTIVITY_FINISHED, finishPreviousActivity);
+
+        intent
+                .putExtras(data)
+                .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity(intent);
+
+        if (finishPreviousActivity && (context instanceof Activity)) {
+            ((Activity) context).finish();
+        }
+    }
+
+    public static void startAugmentedImageActivity(@NonNull Context context, boolean finishPreviousActivity)
+    {
+        Intent intent = new Intent(context, AugmentedImageActivity.class);
 
         Bundle data = new Bundle();
         data.putBoolean(Constants.EXTRA_PREV_ACTIVITY_FINISHED, finishPreviousActivity);

@@ -7,7 +7,7 @@
     </style>
 
     <style name="SignUpTheme" parent="AppTheme">
-        <item name="colorAccent">@android:color/white</item>
+        <item name="colorAccent">@android:color/black</item>
         <item name="colorControlActivated">@android:color/white</item>
         <item name="colorControlNormal">@android:color/white</item>
         <item name="android:colorControlNormal" tools:targetApi="lollipop">@android:color/white</item>

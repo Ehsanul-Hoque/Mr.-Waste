@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.text.TextUtils" />
+        <import type="android.view.View" />
+        <import type="androidx.core.content.ContextCompat" />
+        <import type="android.graphics.Color" />
+
+        <variable
+            name="title"
+            type="String" />
+
+        <variable
+            name="body"
+            type="String" />
+
+        <variable
+            name="buttonOneText"
+            type="String" />
+
+        <variable
+            name="buttonTwoText"
+            type="String" />
+
+        <variable
+            name="buttonThreeText"
+            type="String" />
+
+    </data>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        android:minWidth="200dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:visibility="@{TextUtils.isEmpty(title) ? View.GONE : View.VISIBLE}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:gravity="center"
+            android:text="@{title}"
+            android:textColor="@color/colorPrimaryText"
+            tools:text="@tools:sample/cities"
+            style="@style/TextAppearance.AppCompat.Title"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:paddingTop="24dp"
+            android:gravity="center"
+            android:text="@{body}"
+            android:textColor="@color/colorPrimaryText"
+            android:textSize="17sp"
+            tools:text="@tools:sample/lorem/random"/>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:padding="4dp"
+            android:orientation="horizontal">
+
+            <androidx.cardview.widget.CardView
+                android:visibility="@{!TextUtils.isEmpty(buttonOneText) ? View.VISIBLE : View.GONE}"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:layout_margin="4dp"
+                android:animateLayoutChanges="true"
+                app:cardElevation="0dp"
+                app:cardCornerRadius="8dp">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/button_one"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:background="@android:color/transparent"
+                    android:text="@{buttonOneText, default=`button 1`}"
+                    android:textColor="@android:color/holo_orange_dark"
+                    android:textSize="14sp"
+                    android:textAllCaps="true"/>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:visibility="@{!TextUtils.isEmpty(buttonTwoText) ? View.VISIBLE : View.GONE}"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:layout_margin="4dp"
+                android:animateLayoutChanges="true"
+                app:cardElevation="0dp"
+                app:cardCornerRadius="8dp">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/button_two"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:background="@android:color/transparent"
+                    android:text="@{buttonTwoText, default=`button 2`}"
+                    android:textColor="@android:color/holo_blue_dark"
+                    android:textSize="14sp"
+                    android:textAllCaps="true"/>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:visibility="@{!TextUtils.isEmpty(buttonThreeText) ? View.VISIBLE : View.GONE}"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:layout_margin="4dp"
+                android:animateLayoutChanges="true"
+                app:cardElevation="0dp"
+                app:cardCornerRadius="8dp">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/button_three"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:background="@color/colorGreen"
+                    android:text="@{buttonThreeText, default=`button 3`}"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    android:textAllCaps="true"/>
+
+            </androidx.cardview.widget.CardView>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</layout>
