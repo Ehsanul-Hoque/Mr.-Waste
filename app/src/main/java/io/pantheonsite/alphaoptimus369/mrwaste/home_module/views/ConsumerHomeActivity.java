@@ -26,16 +26,16 @@ import io.pantheonsite.alphaoptimus369.mrwaste.commons.data.SampleData;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.utils.ActivityStarter;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.utils.Utils;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.views.BaseActivity;
-import io.pantheonsite.alphaoptimus369.mrwaste.databinding.ActivityHomeBinding;
+import io.pantheonsite.alphaoptimus369.mrwaste.databinding.ActivityConsumerHomeBinding;
 import io.pantheonsite.alphaoptimus369.mrwaste.databinding.LayoutDialogBinding;
 import io.pantheonsite.alphaoptimus369.mrwaste.home_module.adapters.AdapterRvProductItem;
 import io.pantheonsite.alphaoptimus369.mrwaste.home_module.models.ProductItem;
 
 
-public class HomeActivity extends BaseActivity
+public class ConsumerHomeActivity extends BaseActivity
 {
 
-    private ActivityHomeBinding binding;
+    private ActivityConsumerHomeBinding binding;
     private boolean activityPaused = false;
     // Set to true ensures requestInstall() triggers installation if necessary.
     private boolean mUserRequestedInstall = true;
@@ -44,7 +44,7 @@ public class HomeActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_home);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_consumer_home);
         binding.setLifecycleOwner(this);
 
         initComponents();
@@ -193,7 +193,7 @@ public class HomeActivity extends BaseActivity
                     ProductItem productItem =
                             SampleData.productsMarkedForSelling.get(adapterPosition);
 
-                    AlertDialog alertDialog = new AlertDialog.Builder(HomeActivity.this)
+                    AlertDialog alertDialog = new AlertDialog.Builder(ConsumerHomeActivity.this)
                             .setTitle(productItem.name)
                             .setMessage(
                                     Utils.getTotalPriceString(

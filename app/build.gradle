@@ -83,6 +83,9 @@ dependencies {
 
     //implementation files("libs/libsceneform_runtime_schemas.jar")
 
+    // Fast Android Networking library
+    implementation 'com.amitshekhar.android:android-networking:1.0.2'
+
 }
 
 

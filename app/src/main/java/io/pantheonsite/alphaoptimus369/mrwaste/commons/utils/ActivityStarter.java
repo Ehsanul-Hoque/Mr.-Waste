@@ -11,7 +11,7 @@ import io.pantheonsite.alphaoptimus369.mrwaste.ar_module.AugmentedImageActivity;
 import io.pantheonsite.alphaoptimus369.mrwaste.auth_module.views.LogInActivity;
 import io.pantheonsite.alphaoptimus369.mrwaste.auth_module.views.SignUpActivity;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.data.Constants;
-import io.pantheonsite.alphaoptimus369.mrwaste.home_module.views.HomeActivity;
+import io.pantheonsite.alphaoptimus369.mrwaste.home_module.views.ConsumerHomeActivity;
 import io.pantheonsite.alphaoptimus369.mrwaste.maps_module.views.MapsActivity;
 
 
@@ -93,7 +93,7 @@ public class ActivityStarter
 
     public static void startHomeActivity(@NonNull Context context, boolean finishPreviousActivity)
     {
-        Intent intent = new Intent(context, HomeActivity.class);
+        Intent intent = new Intent(context, ConsumerHomeActivity.class);
 
         Bundle data = new Bundle();
         data.putBoolean(Constants.EXTRA_PREV_ACTIVITY_FINISHED, finishPreviousActivity);
