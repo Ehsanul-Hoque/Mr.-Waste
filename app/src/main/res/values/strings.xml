@@ -10,7 +10,11 @@
     <string name="mr_waste">Mr. Waste</string>
     <string name="already_registered">Already registered?</string>
     <string name="have_not_registered">Haven\'t registered yet?</string>
-    <string name="save">Save</string>
+    <string name="register">Register</string>
+    <string name="working">Working&#8230;</string>
+    <string name="fill_all_fields">Please fill up all fields</string>
+    <string name="invalid_email">Email is invalid</string>
+    <string name="password_too_short">Password should be at least 6 characters.</string>
 
     <string name="title_activity_maps">Map</string>
     <string name="current_location">Current Location:</string>
@@ -18,4 +22,6 @@
     <string name="failed_to_get_location">Failed to get current location.</string>
     <string name="gps_permission_denied">Permission denied. Showing current location needs GPS to be turned on.</string>
     <string name="location_permission_denied">Permission denied. Please turn on the location permissions from settings.</string>
+    <string name="auth_failed_no_net">Authentication failed. Check your internet connection and try again.</string>
+    <string name="auth_failed_no_net_or_not_reg">Authentication failed. Check your internet connection and be sure to register first if you haven\'t.</string>
 </resources>

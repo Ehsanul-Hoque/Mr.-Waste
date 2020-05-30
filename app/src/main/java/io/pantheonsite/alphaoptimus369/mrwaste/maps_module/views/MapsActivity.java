@@ -10,13 +10,13 @@ import android.location.Location;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -25,18 +25,28 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import io.pantheonsite.alphaoptimus369.mrwaste.R;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.data.Constants;
+import io.pantheonsite.alphaoptimus369.mrwaste.commons.utils.ActivityStarter;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.utils.GpsUtils;
+import io.pantheonsite.alphaoptimus369.mrwaste.commons.views.BaseActivity;
 import io.pantheonsite.alphaoptimus369.mrwaste.databinding.ActivityMapsBinding;
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends BaseActivity implements OnMapReadyCallback
+{
 
     private ActivityMapsBinding binding;
     private GoogleMap mMap;
@@ -45,6 +55,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private double latitude = 0.0, longitude = 0.0;
     private Address locationAddress = null;
 
+    private String userEmail, userContactNo, userType, userPassword, addressLine;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,16 +64,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         binding = DataBindingUtil.setContentView(this, R.layout.activity_maps);
         binding.setLifecycleOwner(this);
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        if (mapFragment != null) {
-            mapFragment.getMapAsync(this);
-        }
-
+        getExtras();
+        initComponents();
         initUi();
+        initListeners();
     }
 
     @Override
@@ -132,9 +138,43 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
+    private void getExtras()
+    {
+        Bundle extras = getIntent().getExtras();
+
+        if (extras != null) {
+            userEmail = extras.getString(Constants.EXTRA_EMAIL, "");
+            userContactNo = extras.getString(Constants.EXTRA_CONTACT_NO, "");
+            userType = extras.getString(Constants.EXTRA_USER_TYPE, "");
+            userPassword = extras.getString(Constants.EXTRA_PASSWORD, "");
+        }
+    }
+
+    private void initComponents()
+    {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+    }
+
     private void initUi()
     {
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
+
         binding.imageViewMarker.setImageResource(R.drawable.ic_unknown_location_colorprimary_24dp);
+    }
+
+    private void initListeners()
+    {
+        binding.buttonSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                registerInFirebase();
+            }
+        });
     }
 
     private void getLocationPermissionForCurrentPosition()
@@ -157,6 +197,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @SuppressLint("MissingPermission")
     private void getCurrentUserLocation()
     {
+        showProgressDialog();
         fusedLocationClient.getLastLocation().addOnCompleteListener(this, task -> {
             if (task.isSuccessful()) {
                 Location result = task.getResult();
@@ -171,13 +212,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Log.e(Constants.LOG_TAG, "onComplete: task result is null");
                 }
 
+                geocodeLocation(true, true);
+
             } else {
                 Toast.makeText(MapsActivity.this, R.string.failed_to_get_location,
                         Toast.LENGTH_LONG).show();
                 Log.e(Constants.LOG_TAG, "onComplete: task failed successfully!");
+
+                geocodeLocation(false, true);
             }
 
-            geocodeLocation(true, true);
+            hideProgressDialog();
             setListenerToUpdateLocationAfterMove();
         });
     }
@@ -208,7 +253,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void updateUi(boolean mapAutoZoom, boolean moveCamera)
     {
-        String addressLine = null, featureName = "---", locality = "---";
+        String featureName = "---", locality = "---";
 
         if (locationAddress != null) {
             Log.w(Constants.LOG_TAG, "updateUi: lat = " + locationAddress.getLatitude() + ", lng = " + locationAddress.getLongitude());
@@ -254,6 +299,69 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             binding.imageViewMarker.setImageResource(R.drawable.ic_place_red_24dp);
             updateLatLngWithCameraLocation(false);
         });
+    }
+
+    private void registerInFirebase()
+    {
+        showProgressDialog();
+
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        mAuth.createUserWithEmailAndPassword(userEmail, userPassword)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(Constants.LOG_TAG, "createUserWithEmail:success");
+                            storeInfoInFirestore();
+
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(Constants.LOG_TAG, "createUserWithEmail:failure", task.getException());
+                            Toast.makeText(MapsActivity.this, R.string.auth_failed_no_net,
+                                    Toast.LENGTH_LONG).show();
+                            hideProgressDialog();
+                        }
+                    }
+                });
+    }
+
+    private void storeInfoInFirestore()
+    {
+        // Access a Cloud Firestore instance from your Activity
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // Create a new user with a first and last name
+        Map<String, Object> user = new HashMap<>();
+        user.put("email", userEmail);
+        user.put("contact", userContactNo);
+        user.put("type", userType);
+        user.put("latitude", latitude);
+        user.put("longitude", longitude);
+        user.put("address", addressLine);
+        user.put("addressCountry", locationAddress.getCountryName());
+        user.put("addressLocality", locationAddress.getLocality());
+        user.put("addressFeature", locationAddress.getFeatureName());
+        user.put("addressThoroughfare", locationAddress.getThoroughfare());
+        user.put("addressAdminArea", locationAddress.getAdminArea());
+        user.put("addressCountryCode", locationAddress.getCountryCode());
+
+        String documentId = userEmail;
+
+        // Add a new document with a generated ID
+        db.collection("users")
+                .document(documentId)
+                .set(user)
+                .addOnSuccessListener(this, aVoid -> {
+                    Log.d(Constants.LOG_TAG, "DocumentSnapshot added with ID: " + documentId);
+                    hideProgressDialog();
+                    ActivityStarter.startHomeActivity(MapsActivity.this, true);
+                })
+                .addOnFailureListener(this, e -> {
+                    Log.w(Constants.LOG_TAG, "Error adding document", e);
+                    hideProgressDialog();
+                    ActivityStarter.startHomeActivity(MapsActivity.this, true);
+                });
     }
 
 }
