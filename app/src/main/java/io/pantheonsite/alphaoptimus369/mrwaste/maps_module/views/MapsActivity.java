@@ -38,6 +38,7 @@ import java.util.Map;
 
 import io.pantheonsite.alphaoptimus369.mrwaste.R;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.data.Constants;
+import io.pantheonsite.alphaoptimus369.mrwaste.commons.models.UserItem;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.utils.ActivityStarter;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.utils.GpsUtils;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.views.BaseActivity;
@@ -310,9 +311,12 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback
                             storeInfoInFirestore();
 
                         } else {
+                            Exception exception = task.getException();
+                            Constants.currentUser = null;
+
                             // If sign in fails, display a message to the user.
-                            Log.w(Constants.LOG_TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(MapsActivity.this, R.string.auth_failed_no_net,
+                            Log.w(Constants.LOG_TAG, "createUserWithEmail:failure", exception);
+                            Toast.makeText(MapsActivity.this, R.string.auth_failed_no_net_reg,
                                     Toast.LENGTH_LONG).show();
                             hideProgressDialog();
                         }
@@ -349,11 +353,31 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback
                 .addOnSuccessListener(this, aVoid -> {
                     Log.d(Constants.LOG_TAG, "DocumentSnapshot added with ID: " + documentId);
                     hideProgressDialog();
+
+                    Constants.currentUser = new UserItem(
+                            userEmail,
+                            userContactNo,
+                            userType,
+                            addressLine,
+                            latitude,
+                            longitude
+                    );
+
                     ActivityStarter.startHomeActivity(MapsActivity.this, true);
                 })
                 .addOnFailureListener(this, e -> {
                     Log.w(Constants.LOG_TAG, "Error adding document", e);
                     hideProgressDialog();
+
+                    Constants.currentUser = new UserItem(
+                            userEmail,
+                            userContactNo,
+                            userType,
+                            addressLine,
+                            latitude,
+                            longitude
+                    );
+
                     ActivityStarter.startHomeActivity(MapsActivity.this, true);
                 });
     }

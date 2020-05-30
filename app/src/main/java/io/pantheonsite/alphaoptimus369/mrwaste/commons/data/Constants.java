@@ -1,8 +1,12 @@
 package io.pantheonsite.alphaoptimus369.mrwaste.commons.data;
 
+import io.pantheonsite.alphaoptimus369.mrwaste.commons.models.UserItem;
+
 
 public class Constants
 {
+
+    public static UserItem currentUser = null;
 
     public static final int REQUEST_CODE_LOCATION_PERMISSION = 502;
     public static final int REQUEST_CODE_GPS = 485;
@@ -15,4 +19,5 @@ public class Constants
     public static final String EXTRA_PASSWORD = "PASSWORD";
 
     public static final String LOG_TAG = "MY_LOGGER";
+
 }

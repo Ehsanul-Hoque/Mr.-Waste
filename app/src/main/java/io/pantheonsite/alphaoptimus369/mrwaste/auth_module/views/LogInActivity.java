@@ -11,13 +11,17 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import io.pantheonsite.alphaoptimus369.mrwaste.R;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.data.Constants;
+import io.pantheonsite.alphaoptimus369.mrwaste.commons.models.UserItem;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.utils.ActivityStarter;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.views.BaseActivity;
 import io.pantheonsite.alphaoptimus369.mrwaste.databinding.ActivityLogInBinding;
@@ -89,21 +93,70 @@ public class LogInActivity extends BaseActivity
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        hideProgressDialog();
-
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(Constants.LOG_TAG, "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-
-                            ActivityStarter.startHomeActivity(LogInActivity.this, true);
+                            getInfoFromFirestore();
 
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(Constants.LOG_TAG, "signInWithEmail:failure", task.getException());
                             Toast.makeText(LogInActivity.this, R.string.auth_failed_no_net_or_not_reg,
                                     Toast.LENGTH_LONG).show();
+                            hideProgressDialog();
                         }
+                    }
+                });
+    }
+
+    private void getInfoFromFirestore()
+    {
+        hideProgressDialog();
+
+        // Access a Cloud Firestore instance from your Activity
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        String documentId = userEmail.toString();
+
+        // Add a new document with a generated ID
+        db.collection("users")
+                .document(documentId)
+                .get()
+                .addOnSuccessListener(this, new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        hideProgressDialog();
+
+                        Log.d(Constants.LOG_TAG, "getInfoFromFirestore:success. DocumentSnapshot received with ID: " + documentId);
+
+                        if (documentSnapshot != null) {
+                            Double latitude = documentSnapshot.getDouble("latitude");
+                            Double longitude = documentSnapshot.getDouble("longitude");
+
+                            if (latitude == null) latitude = 0.0;
+                            if (longitude == null) longitude = 0.0;
+
+                            Constants.currentUser = new UserItem(
+                                    documentSnapshot.getString("email"),
+                                    documentSnapshot.getString("contact"),
+                                    documentSnapshot.getString("type"),
+                                    documentSnapshot.getString("address"),
+                                    latitude,
+                                    longitude
+                            );
+
+                            ActivityStarter.startHomeActivity(LogInActivity.this, true);
+                        }
+                    }
+                })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        FirebaseAuth.getInstance().signOut();
+                        Constants.currentUser = null;
+
+                        Log.w(Constants.LOG_TAG, "getInfoFromFirestore:failure", e);
+                        Toast.makeText(LogInActivity.this, R.string.auth_failed_no_net_or_not_reg,
+                                Toast.LENGTH_LONG).show();
                     }
                 });
     }

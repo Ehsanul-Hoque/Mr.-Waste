@@ -7,11 +7,13 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
+import io.pantheonsite.alphaoptimus369.mrwaste.R;
 import io.pantheonsite.alphaoptimus369.mrwaste.ar_module.AugmentedImageActivity;
 import io.pantheonsite.alphaoptimus369.mrwaste.auth_module.views.LogInActivity;
 import io.pantheonsite.alphaoptimus369.mrwaste.auth_module.views.SignUpActivity;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.data.Constants;
 import io.pantheonsite.alphaoptimus369.mrwaste.home_module.views.ConsumerHomeActivity;
+import io.pantheonsite.alphaoptimus369.mrwaste.home_module.views.MrWasteHomeActivity;
 import io.pantheonsite.alphaoptimus369.mrwaste.maps_module.views.MapsActivity;
 
 
@@ -93,7 +95,13 @@ public class ActivityStarter
 
     public static void startHomeActivity(@NonNull Context context, boolean finishPreviousActivity)
     {
-        Intent intent = new Intent(context, ConsumerHomeActivity.class);
+        Intent intent;
+
+        if (Constants.currentUser != null
+                && Constants.currentUser.userType.equals(context.getString(R.string.consumer)))
+            intent = new Intent(context, ConsumerHomeActivity.class);
+        else
+            intent = new Intent(context, MrWasteHomeActivity.class);
 
         Bundle data = new Bundle();
         data.putBoolean(Constants.EXTRA_PREV_ACTIVITY_FINISHED, finishPreviousActivity);

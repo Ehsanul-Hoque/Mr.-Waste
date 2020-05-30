@@ -23,18 +23,24 @@
     <string name="gps_permission_denied">Permission denied. Showing current location needs GPS to be turned on.</string>
     <string name="location_permission_denied">Permission denied. Please turn on the location permissions from settings.</string>
     <string name="camera_permission_denied">Permission denied. Please turn on the camera permissions from settings.</string>
-    <string name="auth_failed_no_net">Authentication failed. Check your internet connection and try again.</string>
-    <string name="auth_failed_no_net_or_not_reg">Authentication failed. Check your internet connection and be sure to register first if you haven\'t.</string>
+    <string name="auth_failed_no_net_reg">Failed! Check your internet connection. If you have already registered, then log in.</string>
+    <string name="auth_failed_no_net_or_not_reg">Failed! Check your internet connection and be sure to register first if you haven\'t.</string>
 
     <string name="scan_product">Scan product</string>
     <string name="fit_image_to_scan">Fit image to scan</string>
-    <string name="products_marked">Products you requested to sell</string>
+    <string name="products_marked">Products you placed requests to sell</string>
     <string name="products_prices">Products selling prices</string>
     <plurals name="pieces">
         <item quantity="one">piece</item>
         <item quantity="other">pieces</item>
     </plurals>
+    <plurals name="requests">
+        <item quantity="one">request</item>
+        <item quantity="other">requests</item>
+    </plurals>
     <string name="per_piece">per piece</string>
     <string name="save">Save</string>
     <string name="close">Close</string>
+
+    <string name="waste_requests">Waste Requests</string>
 </resources>
