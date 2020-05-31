@@ -214,7 +214,10 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback
                         Toast.LENGTH_LONG).show();
                 Log.e(ConstantsAndStaticData.LOG_TAG, "onComplete: task failed successfully!");
 
-                geocodeLocation(false, true);
+                latitude = 41.8;
+                longitude = -71.4;
+
+                geocodeLocation(true, true);
             }
 
             hideProgressDialog();

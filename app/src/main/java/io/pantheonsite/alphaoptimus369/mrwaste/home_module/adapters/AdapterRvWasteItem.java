@@ -56,7 +56,7 @@ public class AdapterRvWasteItem extends RecyclerView.Adapter < AdapterRvWasteIte
                 Utils.getTotalRequestsString(context, currentItem.requestCount)
         );
 
-        holder.itemView.setOnClickListener(v -> {
+        holder.binding.relativeLayoutInfo.setOnClickListener(v -> {
             if (onRecyclerViewItemClickListener != null) {
                 onRecyclerViewItemClickListener.onItemClick(v, holder.getAdapterPosition());
             }

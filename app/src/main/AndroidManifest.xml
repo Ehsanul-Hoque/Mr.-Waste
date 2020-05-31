@@ -60,6 +60,12 @@
         <activity android:name=".home_module.views.ConsumerHomeActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity android:name=".home_module.views.MrWasteHomeActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity android:name=".graph_module.views.MrWasteGraphActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".ar_module.AugmentedImageActivity"
             android:configChanges="orientation|screenSize"

@@ -8,10 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
-import com.androidnetworking.AndroidNetworking;
-import com.androidnetworking.common.Priority;
-import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -29,6 +25,7 @@ import java.util.Locale;
 
 import io.pantheonsite.alphaoptimus369.mrwaste.R;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.data.ConstantsAndStaticData;
+import io.pantheonsite.alphaoptimus369.mrwaste.commons.network.ApiClient;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.utils.Utils;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.views.BaseActivity;
 import io.pantheonsite.alphaoptimus369.mrwaste.databinding.ActivityMrWasteGraphBinding;
@@ -36,6 +33,10 @@ import io.pantheonsite.alphaoptimus369.mrwaste.databinding.LayoutGraphBinding;
 import io.pantheonsite.alphaoptimus369.mrwaste.graph_module.enums.ContentState;
 import io.pantheonsite.alphaoptimus369.mrwaste.graph_module.models.HumidityDataItem;
 import io.pantheonsite.alphaoptimus369.mrwaste.graph_module.models.TemperatureDataItem;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class MrWasteGraphActivity extends BaseActivity
@@ -75,83 +76,88 @@ public class MrWasteGraphActivity extends BaseActivity
         // Get humidity data
         humidityDataItems.clear();
         binding.layoutHumidity.setContentState(ContentState.LOADING);
-        AndroidNetworking.get(ConstantsAndStaticData.NASA_DATA_FIND_BY_ORG_BASE_URL)
-                .addPathParameter("protocols", ConstantsAndStaticData.PROTOCOL_HUMIDITY)
-                .addQueryParameter("startdate", startTime)
-                .addQueryParameter("enddate", endTime)
-                .addQueryParameter("organizationname", ConstantsAndStaticData.selectedWasteItem.areaName)
-                .addQueryParameter("geojson", "TRUE")
-                .addQueryParameter("sample", "FALSE")
-                .setPriority(Priority.HIGH)
-                .build()
-                .getAsJSONObject(new JSONObjectRequestListener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            ArrayList < String > xAxisLabels = new ArrayList<>();
-                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss", Locale.ENGLISH);
-                            JSONArray features = response.getJSONArray("features");
-
-                            if (features.length() <= 0) {
-                                binding.layoutHumidity.setContentState(ContentState.NO_DATA_AVAILABLE);
-                                return;
-                            }
-
-                            for (int i = 0, len = features.length(); i < len; ++i) {
-                                JSONObject properties = features.getJSONObject(i)
-                                        .getJSONObject("properties");
-
-                                Date measuredAt = simpleDateFormat.parse(properties.getString("humiditiesMeasuredAt"));
-
-                                if (measuredAt != null) {
-                                    Calendar previousMeasuredCalendar;
-                                    Calendar currentMeasuredCalendar = Calendar.getInstance();
-                                    currentMeasuredCalendar.setTime(measuredAt);
-
-                                    if (humidityDataItems.isEmpty())
-                                        previousMeasuredCalendar = null;
-                                    else
-                                        previousMeasuredCalendar = humidityDataItems.get(humidityDataItems.size() - 1).measuredDateCalendar;
-
-                                    if ((previousMeasuredCalendar != null)
-                                            && (previousMeasuredCalendar.get(Calendar.DAY_OF_YEAR)
-                                            == currentMeasuredCalendar.get(Calendar.DAY_OF_YEAR))) {
-                                        continue;
-                                    }
-
-                                    String humiditiesDewpoint = properties.getString("humiditiesDewpoint");
-                                    String humiditiesRelativeHumidityPercent = properties.getString("humiditiesRelativeHumidityPercent");
-
-                                    humidityDataItems.add(new HumidityDataItem(
-                                            i,
-                                            Utils.getValidFloat(humiditiesDewpoint, 0),
-                                            Utils.getValidFloat(humiditiesRelativeHumidityPercent, 0),
-                                            currentMeasuredCalendar
-                                    ));
-
-                                    xAxisLabels.add(new SimpleDateFormat("dd MM", Locale.ENGLISH).format(measuredAt));
-                                }
-                            }
-
-                            binding.layoutHumidity.setContentState(ContentState.DATA_AVAILABLE);
-                            processHumidityData(xAxisLabels);
-
-                        } catch (Exception e) {
-                            Log.e(ConstantsAndStaticData.LOG_TAG, "onResponse: ", e);
-                            binding.layoutHumidity.setContentState(ContentState.NO_DATA_AVAILABLE);
+        ApiClient.getApiInterface().getDataFromNasa(
+                ConstantsAndStaticData.PROTOCOL_HUMIDITY,
+                startTime,
+                endTime,
+                ConstantsAndStaticData.selectedWasteItem.areaName,
+                "TRUE",
+                "FALSE"
+        ).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response != null && response.isSuccessful()) {
+                    try {
+                        ResponseBody body = response.body();
+                        if (body == null) {
+                            Log.e(ConstantsAndStaticData.LOG_TAG, "onResponse: response body in null");
+                            return;
                         }
-                    }
 
-                    @Override
-                    public void onError(ANError anError) {
-                        Log.e(ConstantsAndStaticData.LOG_TAG,
-                                "onError: " + anError.getErrorDetail(),
-                                anError.getCause()
-                        );
+                        JSONObject responseJson = new JSONObject(body.string());
+                        Log.d(ConstantsAndStaticData.LOG_TAG, "onResponse: success!");
+                        ArrayList < String > xAxisLabels = new ArrayList<>();
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss", Locale.ENGLISH);
+                        JSONArray features = responseJson.getJSONArray("features");
 
+                        if (features.length() <= 0) {
+                            binding.layoutHumidity.setContentState(ContentState.NO_DATA_AVAILABLE);
+                            return;
+                        }
+
+                        for (int i = 0, len = features.length(); i < len; ++i) {
+                            JSONObject properties = features.getJSONObject(i)
+                                    .getJSONObject("properties");
+
+                            Date measuredAt = simpleDateFormat.parse(properties.getString("humiditiesMeasuredAt"));
+
+                            if (measuredAt != null) {
+                                Calendar previousMeasuredCalendar;
+                                Calendar currentMeasuredCalendar = Calendar.getInstance();
+                                currentMeasuredCalendar.setTime(measuredAt);
+
+                                if (humidityDataItems.isEmpty())
+                                    previousMeasuredCalendar = null;
+                                else
+                                    previousMeasuredCalendar = humidityDataItems.get(humidityDataItems.size() - 1).measuredDateCalendar;
+
+                                if ((previousMeasuredCalendar != null)
+                                        && (previousMeasuredCalendar.get(Calendar.DAY_OF_YEAR)
+                                        == currentMeasuredCalendar.get(Calendar.DAY_OF_YEAR))) {
+                                    continue;
+                                }
+
+                                String humiditiesDewpoint = properties.getString("humiditiesDewpoint");
+                                String humiditiesRelativeHumidityPercent = properties.getString("humiditiesRelativeHumidityPercent");
+
+                                humidityDataItems.add(new HumidityDataItem(
+                                        i,
+                                        Utils.getValidFloat(humiditiesDewpoint, 0),
+                                        Utils.getValidFloat(humiditiesRelativeHumidityPercent, 0),
+                                        currentMeasuredCalendar
+                                ));
+
+                                xAxisLabels.add(new SimpleDateFormat("dd MM", Locale.ENGLISH).format(measuredAt));
+                            }
+                        }
+
+                        binding.layoutHumidity.setContentState(ContentState.DATA_AVAILABLE);
+                        processHumidityData(xAxisLabels);
+
+                    } catch (Exception e) {
+                        Log.e(ConstantsAndStaticData.LOG_TAG, "onResponse: ", e);
                         binding.layoutHumidity.setContentState(ContentState.NO_DATA_AVAILABLE);
                     }
-                });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e(ConstantsAndStaticData.LOG_TAG, "onFailure: " + t.getMessage(), t);
+
+                binding.layoutHumidity.setContentState(ContentState.NO_DATA_AVAILABLE);
+            }
+        });
 
         // Get air temperature data
         getTemperatureData(
@@ -208,54 +214,59 @@ public class MrWasteGraphActivity extends BaseActivity
         // Get sky conditions
         binding.textViewSkyConditions.setText(R.string.no_data_available);
         binding.textViewSkyConditions.setTextColor(Color.DKGRAY);
-        AndroidNetworking.get(ConstantsAndStaticData.NASA_DATA_FIND_BY_ORG_BASE_URL)
-                .addPathParameter("protocols", ConstantsAndStaticData.PROTOCOL_SKY_CONDITIONS)
-                .addQueryParameter("startdate", startTime)
-                .addQueryParameter("enddate", endTime)
-                .addQueryParameter("organizationname", ConstantsAndStaticData.selectedWasteItem.areaName)
-                .addQueryParameter("geojson", "TRUE")
-                .addQueryParameter("sample", "FALSE")
-                .setPriority(Priority.HIGH)
-                .build()
-                .getAsJSONObject(new JSONObjectRequestListener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            JSONArray features = response.getJSONArray("features");
+        ApiClient.getApiInterface().getDataFromNasa(
+                ConstantsAndStaticData.PROTOCOL_SKY_CONDITIONS,
+                startTime,
+                endTime,
+                ConstantsAndStaticData.selectedWasteItem.areaName,
+                "TRUE",
+                "FALSE"
+        ).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response != null && response.isSuccessful()) {
+                    try {
+                        ResponseBody body = response.body();
+                        if (body == null) {
+                            Log.e(ConstantsAndStaticData.LOG_TAG, "onResponse: response body in null");
+                            return;
+                        }
 
-                            if (features.length() <= 0) {
-                                binding.textViewSkyConditions.setText(R.string.no_data_available);
-                                binding.textViewSkyConditions.setTextColor(Color.DKGRAY);
-                                return;
-                            }
+                        JSONObject responseJson = new JSONObject(body.string());
+                        Log.d(ConstantsAndStaticData.LOG_TAG, "onResponse: success!");
+                        JSONArray features = responseJson.getJSONArray("features");
 
-                            JSONObject properties = features.getJSONObject(0)
-                                    .getJSONObject("properties");
-
-                            String cloudCover = properties.getString("skyconditionsCloudCover");
-
-                            binding.textViewSkyConditions.setText(cloudCover);
-                            binding.textViewSkyConditions.setTextColor(ContextCompat.getColor(MrWasteGraphActivity.this, R.color.colorPrimaryText));
-
-                        } catch (Exception e) {
-                            Log.e(ConstantsAndStaticData.LOG_TAG, "onResponse: ", e);
-
+                        if (features.length() <= 0) {
                             binding.textViewSkyConditions.setText(R.string.no_data_available);
                             binding.textViewSkyConditions.setTextColor(Color.DKGRAY);
+                            return;
                         }
-                    }
 
-                    @Override
-                    public void onError(ANError anError) {
-                        Log.e(ConstantsAndStaticData.LOG_TAG,
-                                "onError: " + anError.getErrorDetail(),
-                                anError.getCause()
-                        );
+                        JSONObject properties = features.getJSONObject(0)
+                                .getJSONObject("properties");
+
+                        String cloudCover = properties.getString("skyconditionsCloudCover");
+
+                        binding.textViewSkyConditions.setText(cloudCover);
+                        binding.textViewSkyConditions.setTextColor(ContextCompat.getColor(MrWasteGraphActivity.this, R.color.colorPrimaryText));
+
+                    } catch (Exception e) {
+                        Log.e(ConstantsAndStaticData.LOG_TAG, "onResponse: ", e);
 
                         binding.textViewSkyConditions.setText(R.string.no_data_available);
                         binding.textViewSkyConditions.setTextColor(Color.DKGRAY);
                     }
-                });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e(ConstantsAndStaticData.LOG_TAG, "onFailure: " + t.getMessage(), t);
+
+                binding.textViewSkyConditions.setText(R.string.no_data_available);
+                binding.textViewSkyConditions.setTextColor(Color.DKGRAY);
+            }
+        });
     }
 
     private void getTemperatureData(@NonNull ArrayList < TemperatureDataItem > tempDataItems,
@@ -269,87 +280,93 @@ public class MrWasteGraphActivity extends BaseActivity
     {
         tempDataItems.clear();
         layoutGraphBinding.setContentState(ContentState.LOADING);
-        AndroidNetworking.get(ConstantsAndStaticData.NASA_DATA_FIND_BY_ORG_BASE_URL)
-                .addPathParameter("protocols", protocol)
-                .addQueryParameter("startdate", startTime)
-                .addQueryParameter("enddate", endTime)
-                .addQueryParameter("organizationname", ConstantsAndStaticData.selectedWasteItem.areaName)
-                .addQueryParameter("geojson", "TRUE")
-                .addQueryParameter("sample", "FALSE")
-                .setPriority(Priority.HIGH)
-                .build()
-                .getAsJSONObject(new JSONObjectRequestListener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            ArrayList < String > xAxisLabels = new ArrayList<>();
-                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss", Locale.ENGLISH);
-                            JSONArray features = response.getJSONArray("features");
 
-                            if (features.length() <= 0) {
-                                layoutGraphBinding.setContentState(ContentState.NO_DATA_AVAILABLE);
-                                return;
-                            }
-
-                            for (int i = 0, len = features.length(); i < len; ++i) {
-                                JSONObject properties = features.getJSONObject(i)
-                                        .getJSONObject("properties");
-
-                                Date measuredAt = simpleDateFormat.parse(properties.getString(measuredTimeKey));
-
-                                if (measuredAt != null) {
-                                    Calendar previousMeasuredCalendar;
-                                    Calendar currentMeasuredCalendar = Calendar.getInstance();
-                                    currentMeasuredCalendar.setTime(measuredAt);
-
-                                    if (tempDataItems.isEmpty())
-                                        previousMeasuredCalendar = null;
-                                    else
-                                        previousMeasuredCalendar = tempDataItems.get(tempDataItems.size() - 1).measuredDateCalendar;
-
-                                    if ((previousMeasuredCalendar != null)
-                                            && (previousMeasuredCalendar.get(Calendar.DAY_OF_YEAR)
-                                            == currentMeasuredCalendar.get(Calendar.DAY_OF_YEAR))) {
-                                        continue;
-                                    }
-
-                                    String temperature = properties.getString(temperatureKey);
-                                    String minTemperature = properties.getString(minTemperatureKey);
-                                    String maxTemperature = properties.getString(maxTemperatureKey);
-
-                                    float currentTemp = Utils.getValidFloat(temperature, 0);
-
-                                    tempDataItems.add(new TemperatureDataItem(
-                                            i,
-                                            currentTemp,
-                                            Utils.getValidFloat(maxTemperature, currentTemp),
-                                            Utils.getValidFloat(minTemperature, currentTemp),
-                                            currentMeasuredCalendar
-                                    ));
-
-                                    xAxisLabels.add(new SimpleDateFormat("dd MM", Locale.ENGLISH).format(measuredAt));
-                                }
-                            }
-
-                            layoutGraphBinding.setContentState(ContentState.DATA_AVAILABLE);
-                            processTemperatureData(tempDataItems, xAxisLabels, layoutGraphBinding);
-
-                        } catch (Exception e) {
-                            Log.e(ConstantsAndStaticData.LOG_TAG, "onResponse: ", e);
-                            layoutGraphBinding.setContentState(ContentState.NO_DATA_AVAILABLE);
+        ApiClient.getApiInterface().getDataFromNasa(
+                protocol,
+                startTime,
+                endTime,
+                ConstantsAndStaticData.selectedWasteItem.areaName,
+                "TRUE",
+                "FALSE"
+        ).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response != null && response.isSuccessful()) {
+                    try {
+                        ResponseBody body = response.body();
+                        if (body == null) {
+                            Log.e(ConstantsAndStaticData.LOG_TAG, "onResponse: response body in null");
+                            return;
                         }
-                    }
 
-                    @Override
-                    public void onError(ANError anError) {
-                        Log.e(ConstantsAndStaticData.LOG_TAG,
-                                "onError: " + anError.getErrorDetail(),
-                                anError.getCause()
-                        );
+                        JSONObject responseJson = new JSONObject(body.string());
+                        Log.d(ConstantsAndStaticData.LOG_TAG, "onResponse: success!");
+                        ArrayList < String > xAxisLabels = new ArrayList<>();
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss", Locale.ENGLISH);
+                        JSONArray features = responseJson.getJSONArray("features");
 
+                        if (features.length() <= 0) {
+                            layoutGraphBinding.setContentState(ContentState.NO_DATA_AVAILABLE);
+                            return;
+                        }
+
+                        for (int i = 0, len = features.length(); i < len; ++i) {
+                            JSONObject properties = features.getJSONObject(i)
+                                    .getJSONObject("properties");
+
+                            Date measuredAt = simpleDateFormat.parse(properties.getString(measuredTimeKey));
+
+                            if (measuredAt != null) {
+                                Calendar previousMeasuredCalendar;
+                                Calendar currentMeasuredCalendar = Calendar.getInstance();
+                                currentMeasuredCalendar.setTime(measuredAt);
+
+                                if (tempDataItems.isEmpty())
+                                    previousMeasuredCalendar = null;
+                                else
+                                    previousMeasuredCalendar = tempDataItems.get(tempDataItems.size() - 1).measuredDateCalendar;
+
+                                if ((previousMeasuredCalendar != null)
+                                        && (previousMeasuredCalendar.get(Calendar.DAY_OF_YEAR)
+                                        == currentMeasuredCalendar.get(Calendar.DAY_OF_YEAR))) {
+                                    continue;
+                                }
+
+                                String temperature = properties.getString(temperatureKey);
+                                String minTemperature = properties.getString(minTemperatureKey);
+                                String maxTemperature = properties.getString(maxTemperatureKey);
+
+                                float currentTemp = Utils.getValidFloat(temperature, 0);
+
+                                tempDataItems.add(new TemperatureDataItem(
+                                        i,
+                                        currentTemp,
+                                        Utils.getValidFloat(maxTemperature, currentTemp),
+                                        Utils.getValidFloat(minTemperature, currentTemp),
+                                        currentMeasuredCalendar
+                                ));
+
+                                xAxisLabels.add(new SimpleDateFormat("dd MM", Locale.ENGLISH).format(measuredAt));
+                            }
+                        }
+
+                        layoutGraphBinding.setContentState(ContentState.DATA_AVAILABLE);
+                        processTemperatureData(tempDataItems, xAxisLabels, layoutGraphBinding);
+
+                    } catch (Exception e) {
+                        Log.e(ConstantsAndStaticData.LOG_TAG, "onResponse: ", e);
                         layoutGraphBinding.setContentState(ContentState.NO_DATA_AVAILABLE);
                     }
-                });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e(ConstantsAndStaticData.LOG_TAG, "onFailure: " + t.getMessage(), t);
+
+                layoutGraphBinding.setContentState(ContentState.NO_DATA_AVAILABLE);
+            }
+        });
     }
 
     private void processHumidityData(@NonNull ArrayList < String > xAxisLabels)

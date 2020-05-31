@@ -12,6 +12,7 @@ import io.pantheonsite.alphaoptimus369.mrwaste.ar_module.AugmentedImageActivity;
 import io.pantheonsite.alphaoptimus369.mrwaste.auth_module.views.LogInActivity;
 import io.pantheonsite.alphaoptimus369.mrwaste.auth_module.views.SignUpActivity;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.data.ConstantsAndStaticData;
+import io.pantheonsite.alphaoptimus369.mrwaste.graph_module.views.MrWasteGraphActivity;
 import io.pantheonsite.alphaoptimus369.mrwaste.home_module.models.WasteItem;
 import io.pantheonsite.alphaoptimus369.mrwaste.home_module.views.ConsumerHomeActivity;
 import io.pantheonsite.alphaoptimus369.mrwaste.home_module.views.MrWasteHomeActivity;
@@ -109,7 +110,7 @@ public class ActivityStarter
 
         intent
                 .putExtras(data)
-                .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
 
         if (finishPreviousActivity && (context instanceof Activity)) {
@@ -139,7 +140,7 @@ public class ActivityStarter
                                                  @NonNull WasteItem wasteItem,
                                                  boolean finishPreviousActivity)
     {
-        Intent intent = new Intent(context, AugmentedImageActivity.class);
+        Intent intent = new Intent(context, MrWasteGraphActivity.class);
         ConstantsAndStaticData.selectedWasteItem = wasteItem;
 
         Bundle data = new Bundle();
