@@ -124,8 +124,6 @@ public class LogInActivity extends BaseActivity
                 .addOnSuccessListener(this, new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        hideProgressDialog();
-
                         Log.d(ConstantsAndStaticData.LOG_TAG, "getInfoFromFirestore:success. DocumentSnapshot received with ID: " + documentId);
 
                         if (documentSnapshot != null) {
@@ -146,6 +144,8 @@ public class LogInActivity extends BaseActivity
 
                             ActivityStarter.startHomeActivity(LogInActivity.this, true);
                         }
+
+                        hideProgressDialog();
                     }
                 })
                 .addOnFailureListener(this, new OnFailureListener() {
@@ -157,6 +157,8 @@ public class LogInActivity extends BaseActivity
                         Log.w(ConstantsAndStaticData.LOG_TAG, "getInfoFromFirestore:failure", e);
                         Toast.makeText(LogInActivity.this, R.string.auth_failed_no_net_or_not_reg,
                                 Toast.LENGTH_LONG).show();
+
+                        hideProgressDialog();
                     }
                 });
     }
