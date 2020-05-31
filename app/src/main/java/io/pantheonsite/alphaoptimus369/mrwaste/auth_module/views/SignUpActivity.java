@@ -12,7 +12,9 @@ import androidx.databinding.DataBindingUtil;
 import com.google.firebase.auth.FirebaseAuth;
 
 import io.pantheonsite.alphaoptimus369.mrwaste.R;
+import io.pantheonsite.alphaoptimus369.mrwaste.commons.data.ConstantsAndStaticData;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.utils.ActivityStarter;
+import io.pantheonsite.alphaoptimus369.mrwaste.commons.utils.SharedPreferencesManager;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.views.BaseActivity;
 import io.pantheonsite.alphaoptimus369.mrwaste.databinding.ActivitySignUpBinding;
 
@@ -43,9 +45,18 @@ public class SignUpActivity extends BaseActivity
     {
         // Initialize Firebase Auth
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        ConstantsAndStaticData.currentUser = new SharedPreferencesManager().getCurrentUser();
+
         if (mAuth.getCurrentUser() != null) {
-            ActivityStarter.startHomeActivity(this, true);
-            return true;
+            if (ConstantsAndStaticData.currentUser != null) {
+                ActivityStarter.startHomeActivity(this, true);
+                return true;
+
+            } else {
+                mAuth.signOut();
+                new SharedPreferencesManager().saveCurrentUser(null);
+                return false;
+            }
         }
 
         return false;

@@ -41,6 +41,7 @@ import io.pantheonsite.alphaoptimus369.mrwaste.commons.data.ConstantsAndStaticDa
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.models.UserItem;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.utils.ActivityStarter;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.utils.GpsUtils;
+import io.pantheonsite.alphaoptimus369.mrwaste.commons.utils.SharedPreferencesManager;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.views.BaseActivity;
 import io.pantheonsite.alphaoptimus369.mrwaste.databinding.ActivityMapsBinding;
 
@@ -316,6 +317,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback
                         } else {
                             Exception exception = task.getException();
                             ConstantsAndStaticData.currentUser = null;
+                            new SharedPreferencesManager().saveCurrentUser(ConstantsAndStaticData.currentUser);
 
                             // If sign in fails, display a message to the user.
                             Log.w(ConstantsAndStaticData.LOG_TAG, "createUserWithEmail:failure", exception);
@@ -365,6 +367,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback
                             latitude,
                             longitude
                     );
+                    new SharedPreferencesManager().saveCurrentUser(ConstantsAndStaticData.currentUser);
 
                     ActivityStarter.startHomeActivity(MapsActivity.this, true);
                 })
@@ -380,6 +383,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback
                             latitude,
                             longitude
                     );
+                    new SharedPreferencesManager().saveCurrentUser(ConstantsAndStaticData.currentUser);
 
                     ActivityStarter.startHomeActivity(MapsActivity.this, true);
                 });

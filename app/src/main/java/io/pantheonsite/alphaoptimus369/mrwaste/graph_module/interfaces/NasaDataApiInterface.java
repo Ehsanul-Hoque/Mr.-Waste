@@ -6,10 +6,10 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 
-public interface ApiInterface
+public interface NasaDataApiInterface
 {
 
-    @GET(".")
+    @GET("v1/measurement/protocol/measureddate/organizationname/")
     Call < ResponseBody > getDataFromNasa(@Query("protocols") String protocol,
                                           @Query("startdate") String startdate,
                                           @Query("enddate") String enddate,

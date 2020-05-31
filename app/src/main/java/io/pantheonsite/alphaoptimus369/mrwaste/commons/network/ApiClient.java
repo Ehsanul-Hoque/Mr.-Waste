@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 import java.util.concurrent.TimeUnit;
 
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.data.ConstantsAndStaticData;
-import io.pantheonsite.alphaoptimus369.mrwaste.graph_module.interfaces.ApiInterface;
+import io.pantheonsite.alphaoptimus369.mrwaste.graph_module.interfaces.NasaDataApiInterface;
 import okhttp3.CacheControl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -42,10 +42,9 @@ public class ApiClient
     }
 
     @NonNull
-    public static ApiInterface getApiInterface() {
-        return getRetrofitClient().create(ApiInterface.class);
+    public static NasaDataApiInterface getApiInterface() {
+        return getRetrofitClient().create(NasaDataApiInterface.class);
     }
-
 
     @NonNull
     public static Interceptor provideCacheInterceptor() {

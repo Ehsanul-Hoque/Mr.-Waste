@@ -23,6 +23,7 @@ import io.pantheonsite.alphaoptimus369.mrwaste.R;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.data.ConstantsAndStaticData;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.models.UserItem;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.utils.ActivityStarter;
+import io.pantheonsite.alphaoptimus369.mrwaste.commons.utils.SharedPreferencesManager;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.views.BaseActivity;
 import io.pantheonsite.alphaoptimus369.mrwaste.databinding.ActivityLogInBinding;
 
@@ -52,9 +53,18 @@ public class LogInActivity extends BaseActivity
     {
         // Initialize Firebase Auth
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        ConstantsAndStaticData.currentUser = new SharedPreferencesManager().getCurrentUser();
+
         if (mAuth.getCurrentUser() != null) {
-            ActivityStarter.startHomeActivity(this, true);
-            return true;
+            if (ConstantsAndStaticData.currentUser != null) {
+                ActivityStarter.startHomeActivity(this, true);
+                return true;
+
+            } else {
+                mAuth.signOut();
+                new SharedPreferencesManager().saveCurrentUser(null);
+                return false;
+            }
         }
 
         return false;
@@ -141,6 +151,7 @@ public class LogInActivity extends BaseActivity
                                     latitude,
                                     longitude
                             );
+                            new SharedPreferencesManager().saveCurrentUser(ConstantsAndStaticData.currentUser);
 
                             ActivityStarter.startHomeActivity(LogInActivity.this, true);
                         }
@@ -153,6 +164,7 @@ public class LogInActivity extends BaseActivity
                     public void onFailure(@NonNull Exception e) {
                         FirebaseAuth.getInstance().signOut();
                         ConstantsAndStaticData.currentUser = null;
+                        new SharedPreferencesManager().saveCurrentUser(ConstantsAndStaticData.currentUser);
 
                         Log.w(ConstantsAndStaticData.LOG_TAG, "getInfoFromFirestore:failure", e);
                         Toast.makeText(LogInActivity.this, R.string.auth_failed_no_net_or_not_reg,

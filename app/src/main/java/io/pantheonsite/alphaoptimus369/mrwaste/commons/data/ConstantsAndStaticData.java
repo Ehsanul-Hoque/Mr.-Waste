@@ -10,8 +10,8 @@ public class ConstantsAndStaticData
     public static UserItem currentUser = null;
     public static WasteItem selectedWasteItem = null;
 
-    public static final String NASA_DATA_FIND_BY_ORG_BASE_URL =
-            "https://api.globe.gov/search/v1/measurement/protocol/measureddate/organizationname/";
+    public static final String NASA_DATA_FIND_BY_ORG_BASE_URL = "https://api.globe.gov/search/";
+    public static final String FIREBASE_REST_API_BASE_URL = "https://fcm.googleapis.com/";
 
     public static final String PROTOCOL_AIR_TEMP_DAILY = "air_temp_dailies";
     public static final String PROTOCOL_HUMIDITY = "humidities";

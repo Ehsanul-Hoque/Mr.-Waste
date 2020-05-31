@@ -66,6 +66,9 @@ dependencies {
     // Firebase Firestore
     implementation 'com.google.firebase:firebase-firestore:21.4.3'
 
+    // Firebase Cloud Messaging
+    implementation 'com.google.firebase:firebase-messaging:20.2.0'
+
     // Maps, places and location
     implementation 'com.google.android.gms:play-services-maps:17.0.0' // for Maps
     implementation 'com.google.android.gms:play-services-places:17.0.0' // for Geocoder
@@ -90,7 +93,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.6.2'
     implementation 'com.squareup.retrofit2:converter-gson:2.6.2'
 
-    //OkHttp interceptor
+    // OkHttp interceptor
     implementation 'com.squareup.okhttp3:okhttp-urlconnection:4.2.2'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.2.2'
 
