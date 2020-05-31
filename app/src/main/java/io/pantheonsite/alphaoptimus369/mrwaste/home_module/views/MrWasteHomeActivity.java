@@ -9,9 +9,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import io.pantheonsite.alphaoptimus369.mrwaste.R;
+import io.pantheonsite.alphaoptimus369.mrwaste.app.App;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.data.ConstantsAndStaticData;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.data.SampleData;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.utils.ActivityStarter;
+import io.pantheonsite.alphaoptimus369.mrwaste.commons.utils.MyNotificationManager;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.views.BaseActivity;
 import io.pantheonsite.alphaoptimus369.mrwaste.databinding.ActivityMrWasteHomeBinding;
 import io.pantheonsite.alphaoptimus369.mrwaste.home_module.adapters.AdapterRvWasteItem;
@@ -32,6 +34,8 @@ public class MrWasteHomeActivity extends BaseActivity
         subscribeToCloudMessageTopic();
         initComponents();
         initListeners();
+
+        MyNotificationManager.showNotification(App.getInstance());
     }
 
     private void subscribeToCloudMessageTopic()

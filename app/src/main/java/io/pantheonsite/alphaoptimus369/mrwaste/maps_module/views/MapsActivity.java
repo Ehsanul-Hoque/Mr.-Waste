@@ -274,11 +274,11 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback
                 if (!mapAutoZoom)
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                 else
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18f));
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 2f));
 
             } else {
                 if (mapAutoZoom)
-                    mMap.animateCamera(CameraUpdateFactory.zoomTo(18f));
+                    mMap.animateCamera(CameraUpdateFactory.zoomTo(2f));
             }
         }
     }
