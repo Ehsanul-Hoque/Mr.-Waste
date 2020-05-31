@@ -48,6 +48,24 @@
                     layout="@layout/layout_graph"
                     app:title="@{@string/soil_temperature}"/>
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:gravity="center"
+                    android:text="@string/sky_conditions"
+                    style="@style/TextAppearance.AppCompat.Title" />
+
+                <TextView
+                    android:id="@+id/textView_skyConditions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="32dp"
+                    android:gravity="center"
+                    android:text="@string/no_data_available"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/darker_gray"/>
+
             </androidx.appcompat.widget.LinearLayoutCompat>
         </androidx.core.widget.NestedScrollView>
     </FrameLayout>

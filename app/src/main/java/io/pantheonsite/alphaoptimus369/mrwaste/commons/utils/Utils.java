@@ -1,8 +1,10 @@
 package io.pantheonsite.alphaoptimus369.mrwaste.commons.utils;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.Locale;
 
@@ -31,6 +33,19 @@ public class Utils
                 requestCount,
                 context.getResources().getQuantityString(R.plurals.requests, requestCount)
         );
+    }
+
+    public static float getValidFloat(@Nullable String text, float defaultValue)
+    {
+        if (TextUtils.isEmpty(text))
+            return defaultValue;
+
+        try {
+            return Float.parseFloat(text);
+
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
     }
 
 }

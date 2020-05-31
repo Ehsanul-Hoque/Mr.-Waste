@@ -53,5 +53,9 @@
     <string name="soil_temperature">Soil temperature</string>
     <string name="sky_conditions">Sky conditions</string>
 
+    <string name="average_temperature">Average temp.</string>
+    <string name="max_temperature">Max temp.</string>
+    <string name="min_temperature">Min temp.</string>
+
     <string name="no_data_available">No data available</string>
 </resources>
