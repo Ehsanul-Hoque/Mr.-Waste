@@ -137,7 +137,7 @@ public class MrWasteGraphActivity extends BaseActivity
                                         currentMeasuredCalendar
                                 ));
 
-                                xAxisLabels.add(new SimpleDateFormat("dd MM", Locale.ENGLISH).format(measuredAt));
+                                xAxisLabels.add(new SimpleDateFormat("dd MMM", Locale.ENGLISH).format(measuredAt));
                             }
                         }
 
@@ -386,6 +386,9 @@ public class MrWasteGraphActivity extends BaseActivity
         BarDataSet barDataSetDewpoint = new BarDataSet(dewpointEntries, getString(R.string.dewpoint));
         BarDataSet barDataSetRelativeHumidity = new BarDataSet(relativeHumidityEntries, getString(R.string.relative_humidity));
 
+        barDataSetDewpoint.setColor(Color.BLUE);
+        barDataSetRelativeHumidity.setColor(Color.MAGENTA);
+
         float groupSpace = 0.06f;
         float barSpace = 0.02f; // x2 dataset
         float barWidth = 0.45f; // x2 dataset
@@ -395,10 +398,11 @@ public class MrWasteGraphActivity extends BaseActivity
 //        BarData barDataRelativeHumidity = new BarData(barDataSetRelativeHumidity);
         barDataDewpoint.setBarWidth(barWidth);
         binding.layoutHumidity.chart.setData(barDataDewpoint);
-        binding.layoutHumidity.chart.groupBars(0, groupSpace, barSpace);
+        binding.layoutHumidity.chart.groupBars(-0.5f, groupSpace, barSpace);
         binding.layoutHumidity.chart.setFitBars(true);
 
         XAxis xAxis = binding.layoutHumidity.chart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
@@ -428,11 +432,14 @@ public class MrWasteGraphActivity extends BaseActivity
         // BarDataSet lineDataSetMinTemp = new BarDataSet(minTemperatureEntries, getString(R.string.min_temperature));
         // BarDataSet lineDataSetMaxTemp = new BarDataSet(maxTemperatureEntries, getString(R.string.max_temperature));
 
+        barDataSetTemperature.setColor(Color.BLUE);
+
         BarData barDataTemperature = new BarData(barDataSetTemperature);
         layoutGraphBinding.chart.setData(barDataTemperature);
         layoutGraphBinding.chart.setFitBars(true);
 
         XAxis xAxis = layoutGraphBinding.chart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {

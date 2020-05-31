@@ -47,7 +47,12 @@
             android:id="@+id/chart"
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:layout_margin="16dp" />
+            android:layout_marginLeft="4dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"/>
 
         <ProgressBar
             android:visibility="@{contentState == ContentState.LOADING ? View.VISIBLE : View.GONE}"
