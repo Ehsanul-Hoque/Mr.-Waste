@@ -15,7 +15,7 @@ public class Utils
     public static String getTotalPriceString(double singleItemPriceInDollar, int itemCount)
     {
         return String.format(
-                Locale.getDefault(),
+                Locale.ENGLISH,
                 "%.2f$ x %d = %.2f$",
                 singleItemPriceInDollar,
                 itemCount,
@@ -26,7 +26,7 @@ public class Utils
     public static String getTotalRequestsString(@NonNull Context context, int requestCount)
     {
         return String.format(
-                Locale.getDefault(),
+                Locale.ENGLISH,
                 "%d %s",
                 requestCount,
                 context.getResources().getQuantityString(R.plurals.requests, requestCount)

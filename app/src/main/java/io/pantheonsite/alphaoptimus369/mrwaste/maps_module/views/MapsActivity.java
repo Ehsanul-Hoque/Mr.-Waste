@@ -235,7 +235,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback
     private void geocodeLocation(boolean mapAutoZoom, boolean moveCamera)
     {
         try {
-            Geocoder geo = new Geocoder(this.getApplicationContext(), Locale.getDefault());
+            Geocoder geo = new Geocoder(this.getApplicationContext(), Locale.ENGLISH);
             List<Address> addresses = geo.getFromLocation(latitude, longitude, 1);
 
             locationAddress = addresses.isEmpty() ? null : addresses.get(0);
@@ -258,7 +258,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback
         }
 
         if (TextUtils.isEmpty(addressLine))
-            addressLine = String.format(Locale.getDefault(), "%s, %s", featureName, locality);
+            addressLine = String.format(Locale.ENGLISH, "%s, %s", featureName, locality);
 
         binding.textViewCurrentLocation.setText(addressLine);
 

@@ -61,7 +61,7 @@ public class AdapterRvProductItem extends RecyclerView.Adapter < AdapterRvProduc
 
         if (multiplePieceAllowed) {
             title = String.format(
-                    Locale.getDefault(),
+                    Locale.ENGLISH,
                     "%s (%d %s)",
                     currentItem.name,
                     currentItem.itemCount,
@@ -75,7 +75,7 @@ public class AdapterRvProductItem extends RecyclerView.Adapter < AdapterRvProduc
 
         } else {
             title = String.format(
-                    Locale.getDefault(),
+                    Locale.ENGLISH,
                     "%s (%s)",
                     currentItem.name,
                     context.getString(R.string.per_piece)

@@ -9,9 +9,11 @@ import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -57,7 +59,7 @@ public class MrWasteGraphActivity extends BaseActivity
     private void getDataFromNasaApi()
     {
         Calendar tenDaysPrevCalendar = Calendar.getInstance();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         tenDaysPrevCalendar.add(Calendar.DAY_OF_YEAR, -10);
         String startTime = simpleDateFormat.format(tenDaysPrevCalendar.getTime());
         String endTime = simpleDateFormat.format(new Date());
@@ -78,7 +80,8 @@ public class MrWasteGraphActivity extends BaseActivity
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss", Locale.getDefault());
+                            ArrayList < String > xAxisLabels = new ArrayList<>();
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss", Locale.ENGLISH);
                             JSONArray features = response.getJSONArray("features");
 
                             if (features.length() <= 0) {
@@ -114,11 +117,13 @@ public class MrWasteGraphActivity extends BaseActivity
                                             Float.parseFloat(properties.getString("humiditiesRelativeHumidityPercent")),
                                             currentMeasuredCalendar
                                     ));
+
+                                    xAxisLabels.add(new SimpleDateFormat("dd MM", Locale.ENGLISH).format(measuredAt));
                                 }
                             }
 
                             binding.layoutHumidity.setContentState(ContentState.DATA_AVAILABLE);
-                            processHumidityData();
+                            processHumidityData(xAxisLabels);
 
                         } catch (JSONException | ParseException | NumberFormatException e) {
                             Log.e(ConstantsAndStaticData.LOG_TAG, "onResponse: ", e);
@@ -138,7 +143,7 @@ public class MrWasteGraphActivity extends BaseActivity
                 });
     }
 
-    private void processHumidityData()
+    private void processHumidityData(ArrayList<String> xAxisLabels)
     {
         //Log.d(ConstantsAndStaticData.LOG_TAG, "processHumidityData: " + humidityDataItems.toString());
 
@@ -165,6 +170,16 @@ public class MrWasteGraphActivity extends BaseActivity
         barDataDewpoint.setBarWidth(barWidth);
         binding.layoutHumidity.chart.setData(barDataDewpoint);
         binding.layoutHumidity.chart.groupBars(0, groupSpace, barSpace);
+        binding.layoutHumidity.chart.setFitBars(true);
+
+        XAxis xAxis = binding.layoutHumidity.chart.getXAxis();
+        xAxis.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value) {
+                return xAxisLabels.get((int) value);
+            }
+        });
+
         binding.layoutHumidity.chart.invalidate();
     }
 
