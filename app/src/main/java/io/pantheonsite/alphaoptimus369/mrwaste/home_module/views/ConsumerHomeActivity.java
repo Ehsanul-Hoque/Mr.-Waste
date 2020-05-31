@@ -21,7 +21,7 @@ import com.google.ar.core.exceptions.UnavailableDeviceNotCompatibleException;
 import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationException;
 
 import io.pantheonsite.alphaoptimus369.mrwaste.R;
-import io.pantheonsite.alphaoptimus369.mrwaste.commons.data.Constants;
+import io.pantheonsite.alphaoptimus369.mrwaste.commons.data.ConstantsAndStaticData;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.data.SampleData;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.utils.ActivityStarter;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.utils.Utils;
@@ -53,7 +53,7 @@ public class ConsumerHomeActivity extends BaseActivity
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == Constants.REQUEST_CODE_CAMERA) {
+        if (requestCode == ConstantsAndStaticData.REQUEST_CODE_CAMERA) {
             int min = Math.min(permissions.length, grantResults.length);
             boolean allGranted = true;
 
@@ -119,11 +119,11 @@ public class ConsumerHomeActivity extends BaseActivity
         }
         if (availability.isSupported()) {
             binding.setArAvailable(true);
-            Log.d(Constants.LOG_TAG, "maybeEnableArButton: ArCoreApk.getInstance().checkAvailability(this).isSupported() = true");
+            Log.d(ConstantsAndStaticData.LOG_TAG, "maybeEnableArButton: ArCoreApk.getInstance().checkAvailability(this).isSupported() = true");
 
         } else { // Unsupported or unknown.
             binding.setArAvailable(false);
-            Log.w(Constants.LOG_TAG, "maybeEnableArButton: ArCoreApk.getInstance().checkAvailability(this).isSupported() = false");
+            Log.w(ConstantsAndStaticData.LOG_TAG, "maybeEnableArButton: ArCoreApk.getInstance().checkAvailability(this).isSupported() = false");
         }
     }*/
 
@@ -146,12 +146,12 @@ public class ConsumerHomeActivity extends BaseActivity
         } catch (UnavailableUserDeclinedInstallationException e) {
             // Display an appropriate message to the user and return gracefully.
             Toast.makeText(this, "Google Play Services for AR could not be installed.", Toast.LENGTH_LONG).show();
-            Log.e(Constants.LOG_TAG, "checkArServices: ", e);
+            Log.e(ConstantsAndStaticData.LOG_TAG, "checkArServices: ", e);
             return;
 
         } catch (UnavailableDeviceNotCompatibleException e) {
             Toast.makeText(this, "Google Play Services for AR could not be installed.", Toast.LENGTH_LONG).show();
-            Log.e(Constants.LOG_TAG, "checkArServices: ", e);
+            Log.e(ConstantsAndStaticData.LOG_TAG, "checkArServices: ", e);
         }
     }
 
@@ -303,7 +303,7 @@ public class ConsumerHomeActivity extends BaseActivity
                     new String[] {
                             Manifest.permission.CAMERA
                     },
-                    Constants.REQUEST_CODE_CAMERA
+                    ConstantsAndStaticData.REQUEST_CODE_CAMERA
             );
 
         } else {

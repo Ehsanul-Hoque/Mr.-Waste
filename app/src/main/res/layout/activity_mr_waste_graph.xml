@@ -1,15 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
     </data>
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:background="@android:color/white"
-        android:orientation="vertical">
-    </androidx.appcompat.widget.LinearLayoutCompat>
+        android:background="@android:color/white">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:gravity="center_horizontal"
+                android:background="@android:color/white"
+                android:orientation="vertical">
+
+                <include
+                    android:id="@+id/layout_humidity"
+                    layout="@layout/layout_graph"
+                    app:title="@{@string/humidity}"/>
+
+                <include
+                    android:id="@+id/layout_airTemperature"
+                    layout="@layout/layout_graph"
+                    app:title="@{@string/air_temperature}"/>
+
+                <include
+                    android:id="@+id/layout_waterTemperature"
+                    layout="@layout/layout_graph"
+                    app:title="@{@string/water_temperature}"/>
+
+                <include
+                    android:id="@+id/layout_surfaceTemperature"
+                    layout="@layout/layout_graph"
+                    app:title="@{@string/surface_temperature}"/>
+
+                <include
+                    android:id="@+id/layout_soilTemperature"
+                    layout="@layout/layout_graph"
+                    app:title="@{@string/soil_temperature}"/>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.core.widget.NestedScrollView>
+    </FrameLayout>
 </layout>

@@ -48,7 +48,7 @@ public class SampleData
         wasteItems = new ArrayList<>(Arrays.asList(
                 new WasteItem(
                         1001,
-                        "Anthony Carnevale Elementary School, USA",
+                        "Anthony Carnevale Elementary School",
                         5,
                         41.8,
                         -71.5,
@@ -56,7 +56,7 @@ public class SampleData
                 ),
                 new WasteItem(
                         1002,
-                        "Nathan Bishop Middle School, USA",
+                        "Nathan Bishop Middle School",
                         5,
                         41.8,
                         -71.4,
@@ -64,7 +64,7 @@ public class SampleData
                 ),
                 new WasteItem(
                         1003,
-                        "Webster Avenue Elementary School, USA",
+                        "Webster Avenue Elementary School",
                         5,
                         41.8,
                         -71.4,

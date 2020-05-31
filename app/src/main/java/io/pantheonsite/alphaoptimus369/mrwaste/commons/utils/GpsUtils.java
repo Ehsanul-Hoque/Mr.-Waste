@@ -21,7 +21,7 @@ import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-import io.pantheonsite.alphaoptimus369.mrwaste.commons.data.Constants;
+import io.pantheonsite.alphaoptimus369.mrwaste.commons.data.ConstantsAndStaticData;
 
 
 public class GpsUtils
@@ -80,9 +80,9 @@ public class GpsUtils
                                     // Show the dialog by calling startResolutionForResult(), and check the
                                     // result in onActivityResult().
                                     ResolvableApiException rae = (ResolvableApiException) e;
-                                    rae.startResolutionForResult((Activity) context, Constants.REQUEST_CODE_GPS);
+                                    rae.startResolutionForResult((Activity) context, ConstantsAndStaticData.REQUEST_CODE_GPS);
                                 } catch (IntentSender.SendIntentException sie) {
-                                    Log.i(Constants.LOG_TAG, "PendingIntent unable to execute request.");
+                                    Log.i(ConstantsAndStaticData.LOG_TAG, "PendingIntent unable to execute request.");
                                 }
 
                                     break;
@@ -90,7 +90,7 @@ public class GpsUtils
                                 case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
                                     String errorMessage = "Location settings are inadequate, and cannot be " +
                                             "fixed here. Fix in Settings.";
-                                    Log.e(Constants.LOG_TAG, errorMessage);
+                                    Log.e(ConstantsAndStaticData.LOG_TAG, errorMessage);
                                     Toast.makeText((Activity) context, errorMessage, Toast.LENGTH_LONG).show();
                             }
                         }

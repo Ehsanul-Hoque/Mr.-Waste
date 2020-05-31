@@ -37,7 +37,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import io.pantheonsite.alphaoptimus369.mrwaste.R;
-import io.pantheonsite.alphaoptimus369.mrwaste.commons.data.Constants;
+import io.pantheonsite.alphaoptimus369.mrwaste.commons.data.ConstantsAndStaticData;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.models.UserItem;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.utils.ActivityStarter;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.utils.GpsUtils;
@@ -74,7 +74,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == Constants.REQUEST_CODE_GPS) {
+        if (requestCode == ConstantsAndStaticData.REQUEST_CODE_GPS) {
             if (resultCode == RESULT_OK)
                 getLocationPermissionForCurrentPosition();
 
@@ -86,7 +86,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == Constants.REQUEST_CODE_LOCATION_PERMISSION) {
+        if (requestCode == ConstantsAndStaticData.REQUEST_CODE_LOCATION_PERMISSION) {
             int min = Math.min(permissions.length, grantResults.length);
             boolean allGranted = true;
 
@@ -143,10 +143,10 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback
         Bundle extras = getIntent().getExtras();
 
         if (extras != null) {
-            userEmail = extras.getString(Constants.EXTRA_EMAIL, "");
-            userContactNo = extras.getString(Constants.EXTRA_CONTACT_NO, "");
-            userType = extras.getString(Constants.EXTRA_USER_TYPE, "");
-            userPassword = extras.getString(Constants.EXTRA_PASSWORD, "");
+            userEmail = extras.getString(ConstantsAndStaticData.EXTRA_EMAIL, "");
+            userContactNo = extras.getString(ConstantsAndStaticData.EXTRA_CONTACT_NO, "");
+            userType = extras.getString(ConstantsAndStaticData.EXTRA_USER_TYPE, "");
+            userPassword = extras.getString(ConstantsAndStaticData.EXTRA_PASSWORD, "");
         }
     }
 
@@ -181,7 +181,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback
                     new String[] {
                             Manifest.permission.ACCESS_COARSE_LOCATION
                     },
-                    Constants.REQUEST_CODE_LOCATION_PERMISSION
+                    ConstantsAndStaticData.REQUEST_CODE_LOCATION_PERMISSION
             );
 
         } else {
@@ -204,7 +204,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback
                 } else {
                     Toast.makeText(MapsActivity.this, R.string.failed_to_get_location,
                             Toast.LENGTH_LONG).show();
-                    Log.e(Constants.LOG_TAG, "onComplete: task result is null");
+                    Log.e(ConstantsAndStaticData.LOG_TAG, "onComplete: task result is null");
                 }
 
                 geocodeLocation(true, true);
@@ -212,7 +212,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback
             } else {
                 Toast.makeText(MapsActivity.this, R.string.failed_to_get_location,
                         Toast.LENGTH_LONG).show();
-                Log.e(Constants.LOG_TAG, "onComplete: task failed successfully!");
+                Log.e(ConstantsAndStaticData.LOG_TAG, "onComplete: task failed successfully!");
 
                 geocodeLocation(false, true);
             }
@@ -242,7 +242,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback
             updateUi(mapAutoZoom, moveCamera);
 
         } catch (IOException e) {
-            Log.e(Constants.LOG_TAG, "markLocationOnMap: ", e);
+            Log.e(ConstantsAndStaticData.LOG_TAG, "markLocationOnMap: ", e);
         }
     }
 
@@ -251,7 +251,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback
         String featureName = "---", locality = "---";
 
         if (locationAddress != null) {
-            Log.w(Constants.LOG_TAG, "updateUi: lat = " + locationAddress.getLatitude() + ", lng = " + locationAddress.getLongitude());
+            Log.w(ConstantsAndStaticData.LOG_TAG, "updateUi: lat = " + locationAddress.getLatitude() + ", lng = " + locationAddress.getLongitude());
             addressLine = locationAddress.getAddressLine(0);
             featureName = locationAddress.getFeatureName();
             locality = locationAddress.getLocality();
@@ -307,15 +307,15 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d(Constants.LOG_TAG, "createUserWithEmail:success");
+                            Log.d(ConstantsAndStaticData.LOG_TAG, "createUserWithEmail:success");
                             storeInfoInFirestore();
 
                         } else {
                             Exception exception = task.getException();
-                            Constants.currentUser = null;
+                            ConstantsAndStaticData.currentUser = null;
 
                             // If sign in fails, display a message to the user.
-                            Log.w(Constants.LOG_TAG, "createUserWithEmail:failure", exception);
+                            Log.w(ConstantsAndStaticData.LOG_TAG, "createUserWithEmail:failure", exception);
                             Toast.makeText(MapsActivity.this, R.string.auth_failed_no_net_reg,
                                     Toast.LENGTH_LONG).show();
                             hideProgressDialog();
@@ -351,10 +351,10 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback
                 .document(documentId)
                 .set(user)
                 .addOnSuccessListener(this, aVoid -> {
-                    Log.d(Constants.LOG_TAG, "DocumentSnapshot added with ID: " + documentId);
+                    Log.d(ConstantsAndStaticData.LOG_TAG, "DocumentSnapshot added with ID: " + documentId);
                     hideProgressDialog();
 
-                    Constants.currentUser = new UserItem(
+                    ConstantsAndStaticData.currentUser = new UserItem(
                             userEmail,
                             userContactNo,
                             userType,
@@ -366,10 +366,10 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback
                     ActivityStarter.startHomeActivity(MapsActivity.this, true);
                 })
                 .addOnFailureListener(this, e -> {
-                    Log.w(Constants.LOG_TAG, "Error adding document", e);
+                    Log.w(ConstantsAndStaticData.LOG_TAG, "Error adding document", e);
                     hideProgressDialog();
 
-                    Constants.currentUser = new UserItem(
+                    ConstantsAndStaticData.currentUser = new UserItem(
                             userEmail,
                             userContactNo,
                             userType,

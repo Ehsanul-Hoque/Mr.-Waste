@@ -20,7 +20,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import io.pantheonsite.alphaoptimus369.mrwaste.R;
-import io.pantheonsite.alphaoptimus369.mrwaste.commons.data.Constants;
+import io.pantheonsite.alphaoptimus369.mrwaste.commons.data.ConstantsAndStaticData;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.models.UserItem;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.utils.ActivityStarter;
 import io.pantheonsite.alphaoptimus369.mrwaste.commons.views.BaseActivity;
@@ -95,12 +95,12 @@ public class LogInActivity extends BaseActivity
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d(Constants.LOG_TAG, "signInWithEmail:success");
+                            Log.d(ConstantsAndStaticData.LOG_TAG, "signInWithEmail:success");
                             getInfoFromFirestore();
 
                         } else {
                             // If sign in fails, display a message to the user.
-                            Log.w(Constants.LOG_TAG, "signInWithEmail:failure", task.getException());
+                            Log.w(ConstantsAndStaticData.LOG_TAG, "signInWithEmail:failure", task.getException());
                             Toast.makeText(LogInActivity.this, R.string.auth_failed_no_net_or_not_reg,
                                     Toast.LENGTH_LONG).show();
                             hideProgressDialog();
@@ -126,7 +126,7 @@ public class LogInActivity extends BaseActivity
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         hideProgressDialog();
 
-                        Log.d(Constants.LOG_TAG, "getInfoFromFirestore:success. DocumentSnapshot received with ID: " + documentId);
+                        Log.d(ConstantsAndStaticData.LOG_TAG, "getInfoFromFirestore:success. DocumentSnapshot received with ID: " + documentId);
 
                         if (documentSnapshot != null) {
                             Double latitude = documentSnapshot.getDouble("latitude");
@@ -135,7 +135,7 @@ public class LogInActivity extends BaseActivity
                             if (latitude == null) latitude = 0.0;
                             if (longitude == null) longitude = 0.0;
 
-                            Constants.currentUser = new UserItem(
+                            ConstantsAndStaticData.currentUser = new UserItem(
                                     documentSnapshot.getString("email"),
                                     documentSnapshot.getString("contact"),
                                     documentSnapshot.getString("type"),
@@ -152,9 +152,9 @@ public class LogInActivity extends BaseActivity
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         FirebaseAuth.getInstance().signOut();
-                        Constants.currentUser = null;
+                        ConstantsAndStaticData.currentUser = null;
 
-                        Log.w(Constants.LOG_TAG, "getInfoFromFirestore:failure", e);
+                        Log.w(ConstantsAndStaticData.LOG_TAG, "getInfoFromFirestore:failure", e);
                         Toast.makeText(LogInActivity.this, R.string.auth_failed_no_net_or_not_reg,
                                 Toast.LENGTH_LONG).show();
                     }

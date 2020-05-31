@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+        <import type="io.pantheonsite.alphaoptimus369.mrwaste.graph_module.enums.ContentState" />
+
+        <variable
+            name="title"
+            type="String" />
+
+        <variable
+            name="contentState"
+            type="ContentState" />
+
+    </data>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="@{title}"
+            tools:text="Title"
+            style="@style/TextAppearance.AppCompat.Title" />
+
+        <TextView
+            android:visibility="@{contentState == ContentState.NO_DATA_AVAILABLE ? View.VISIBLE : View.GONE}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="32dp"
+            android:gravity="center"
+            android:text="@string/no_data_available"
+            android:textSize="16sp"
+            android:textColor="@android:color/darker_gray"/>
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:visibility="@{contentState == ContentState.DATA_AVAILABLE ? View.VISIBLE : View.GONE}"
+            android:id="@+id/chart"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_margin="16dp" />
+
+        <ProgressBar
+            android:visibility="@{contentState == ContentState.LOADING ? View.VISIBLE : View.GONE}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="32dp" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</layout>

@@ -43,4 +43,15 @@
     <string name="close">Close</string>
 
     <string name="waste_requests">Waste Requests</string>
+
+    <string name="humidity">Humidity</string>
+    <string name="dewpoint">Dewpoint</string>
+    <string name="relative_humidity">Relative humidity</string>
+    <string name="air_temperature">Air temperature</string>
+    <string name="water_temperature">Water temperature</string>
+    <string name="surface_temperature">Surface temperature</string>
+    <string name="soil_temperature">Soil temperature</string>
+    <string name="sky_conditions">Sky conditions</string>
+
+    <string name="no_data_available">No data available</string>
 </resources>
